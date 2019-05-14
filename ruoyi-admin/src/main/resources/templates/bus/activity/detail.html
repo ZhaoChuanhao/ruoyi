@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('活动详情')" />
+</head>
+
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-activity-edit" th:object="${activity}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">活动主题：</label>
+				<div class="form-control-static" th:text="${activity.title}">
+				</div>
+				<!--<div class="col-sm-8">
+					<input id="title" name="title" th:field="*{title}" class="form-control" type="text">
+				</div>-->
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">活动内容：</label>
+				<div class="form-control-static" th:text="${activity.content}">
+				</div>
+				<!--<div class="col-sm-8">
+					<input id="content" name="content" th:field="*{content}" class="form-control" type="text">
+				</div>-->
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">活动时间：</label>
+				<div class="form-control-static" th:text="${activity.date}">
+				</div>
+				<!--<div class="col-sm-8">
+					<input id="date" name="date" th:field="*{date}" class="form-control" type="text">
+				</div>-->
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">活动地点：</label>
+				<div class="form-control-static" th:text="${activity.place}">
+				</div>
+				<!--<div class="col-sm-8">
+					<input id="place" name="place" th:field="*{place}" class="form-control" type="text">
+				</div>-->
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">活动负责人：</label>
+				<div class="form-control-static" th:text="${activity.leader}">
+				</div>
+				<!--<div class="col-sm-8">
+					<input id="leader" name="leader" th:field="*{leader}" class="form-control" type="text">
+				</div>-->
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">负责人联系方式：</label>
+				<div class="form-control-static" th:text="${activity.phone}">
+				</div>
+				<!--<div class="col-sm-8">
+					<input id="phone" name="phone" th:field="*{phone}" class="form-control" type="text">
+				</div>-->
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "bus/activity";
+		$("#form-activity-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-activity-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

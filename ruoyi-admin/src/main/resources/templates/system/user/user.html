@@ -6,7 +6,8 @@
 	<th:block th:include="include :: ztree-css" />
 </head>
 <body class="gray-bg">
-	<div class="ui-layout-west">
+	<!-- 组织机构树 -->
+	<!--<div class="ui-layout-west">
 		<div class="main-content">
 			<div class="box box-main">
 				<div class="box-header">
@@ -25,7 +26,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div>-->
 	
 	<div class="container-div ui-layout-center">
 		<div class="row">
@@ -123,7 +124,8 @@
 		        },
 		        {
 		            field: 'userId',
-		            title: '用户ID'
+		            title: '用户ID',
+					visible: false
 		        },
 		        {
 		            field: 'loginName',
@@ -135,13 +137,8 @@
 		            title: '用户名称'
 		        },
 		        {
-		            field: 'dept.deptName',
-		            title: '部门'
-		        },
-		        {
 		            field: 'email',
-		            title: '邮箱',
-		            visible: false
+		            title: '邮箱'
 		        },
 		        {
 		            field: 'phonenumber',

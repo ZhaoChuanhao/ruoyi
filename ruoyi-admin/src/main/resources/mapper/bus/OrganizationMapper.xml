@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bus.mapper.OrganizationMapper">
+    
+    <resultMap type="Organization" id="OrganizationResult">
+        <result property="id"    column="id"    />
+        <result property="organizationCode"    column="organization_code"    />
+        <result property="name"    column="name"    />
+        <result property="studentNumber"    column="student_number"    />
+        <result property="leader"    column="leader"    />
+        <result property="size"    column="size"    />
+        <result property="funds"    column="funds"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<sql id="selectOrganizationVo">
+        select id, organization_code, name, student_number, leader, size, funds, del_flag, create_by, create_time, update_by, update_time from bus_organization
+    </sql>
+	
+    <select id="selectOrganizationList" parameterType="Organization" resultMap="OrganizationResult">
+        <include refid="selectOrganizationVo"/>
+        where del_flag = 0
+         <if test="id != null "> and id = #{id}</if>
+         <if test="organizationCode != null  and organizationCode != '' "> and organization_code = #{organizationCode}</if>
+         <if test="name != null  and name != '' "> and name = #{name}</if>
+         <if test="studentNumber != null  and studentNumber != '' "> and student_number = #{studentNumber}</if>
+         <if test="leader != null  and leader != '' "> and leader = #{leader}</if>
+         <if test="size != null "> and size = #{size}</if>
+         <if test="funds != null "> and funds = #{funds}</if>
+         <if test="delFlag != null  and delFlag != '' "> and del_flag = #{delFlag}</if>
+         <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+         <if test="createTime != null "> and create_time = #{createTime}</if>
+         <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+         <if test="updateTime != null "> and update_time = #{updateTime}</if>
+    </select>
+    
+    <select id="selectOrganizationById" parameterType="Integer" resultMap="OrganizationResult">
+        <include refid="selectOrganizationVo"/>
+        where id = #{id}
+        and del_flag = 0
+    </select>
+
+    <select id="selectOrganizationByName" parameterType="String" resultMap="OrganizationResult">
+        <include refid="selectOrganizationVo"/>
+        where `name` = #{name}
+        and del_flag = 0
+    </select>
+        
+    <insert id="insertOrganization" parameterType="Organization" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_organization
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="organizationCode != null  and organizationCode != ''  ">organization_code,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="studentNumber != null  and studentNumber != ''  ">student_number,</if>
+			<if test="leader != null  and leader != ''  ">leader,</if>
+			<if test="size != null  ">size,</if>
+			<if test="funds != null  ">funds,</if>
+			<if test="delFlag != null  and delFlag != ''  ">del_flag,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="organizationCode != null  and organizationCode != ''  ">#{organizationCode},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="studentNumber != null  and studentNumber != ''  ">#{studentNumber},</if>
+			<if test="leader != null  and leader != ''  ">#{leader},</if>
+			<if test="size != null  ">#{size},</if>
+			<if test="funds != null  ">#{funds},</if>
+			<if test="delFlag != null  and delFlag != ''  ">#{delFlag},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateOrganization" parameterType="Organization">
+        update bus_organization
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="organizationCode != null  and organizationCode != ''  ">organization_code = #{organizationCode},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="studentNumber != null  and studentNumber != ''  ">student_number = #{studentNumber},</if>
+            <if test="leader != null  and leader != ''  ">leader = #{leader},</if>
+            <if test="size != null  ">size = #{size},</if>
+            <if test="funds != null  ">funds = #{funds},</if>
+            <if test="delFlag != null  and delFlag != ''  ">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<update id="deleteOrganizationById" parameterType="Integer">
+        update bus_organization
+        set del_flag = 2
+        where id = #{id}
+    </update>
+	
+    <update id="deleteOrganizationByIds" parameterType="String">
+        update bus_organization
+        set del_flag = 2
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="selectIdByName" parameterType="String" resultType="Integer">
+        select id
+        from bus_organization
+        where `name` = #{name}
+    </select>
+    
+</mapper>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bus.mapper.CollegeMapper">
+    
+    <resultMap type="College" id="CollegeResult">
+        <result property="id"    column="id"    />
+        <result property="collegeCode"    column="college_code"    />
+        <result property="name"    column="name"    />
+        <result property="leader"    column="leader"    />
+        <result property="instructor"    column="instructor"    />
+        <result property="teacherCount"    column="teacher_count"    />
+        <result property="studentCount"    column="student_count"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<sql id="selectCollegeVo">
+        select id, college_code, name, leader, instructor, teacher_count, student_count, del_flag, create_by, create_time, update_by, update_time from bus_college
+    </sql>
+	
+    <select id="selectCollegeList" parameterType="College" resultMap="CollegeResult">
+        <include refid="selectCollegeVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="collegeCode != null  and collegeCode != '' "> and college_code = #{collegeCode}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="leader != null  and leader != '' "> and leader = #{leader}</if>
+             <if test="instructor != null  and instructor != '' "> and instructor = #{instructor}</if>
+             <if test="teacherCount != null "> and teacher_count = #{teacherCount}</if>
+             <if test="studentCount != null "> and student_count = #{studentCount}</if>
+             <if test="delFlag != null  and delFlag != '' "> and del_flag = #{delFlag}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+         </where>
+    </select>
+    
+    <select id="selectCollegeById" parameterType="Integer" resultMap="CollegeResult">
+        <include refid="selectCollegeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCollege" parameterType="College" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_college
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="collegeCode != null  and collegeCode != ''  ">college_code,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="leader != null  and leader != ''  ">leader,</if>
+			<if test="instructor != null  and instructor != ''  ">instructor,</if>
+			<if test="teacherCount != null  ">teacher_count,</if>
+			<if test="studentCount != null  ">student_count,</if>
+			<if test="delFlag != null  and delFlag != ''  ">del_flag,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="collegeCode != null  and collegeCode != ''  ">#{collegeCode},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="leader != null  and leader != ''  ">#{leader},</if>
+			<if test="instructor != null  and instructor != ''  ">#{instructor},</if>
+			<if test="teacherCount != null  ">#{teacherCount},</if>
+			<if test="studentCount != null  ">#{studentCount},</if>
+			<if test="delFlag != null  and delFlag != ''  ">#{delFlag},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCollege" parameterType="College">
+        update bus_college
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="collegeCode != null  and collegeCode != ''  ">college_code = #{collegeCode},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="leader != null  and leader != ''  ">leader = #{leader},</if>
+            <if test="instructor != null  and instructor != ''  ">instructor = #{instructor},</if>
+            <if test="teacherCount != null  ">teacher_count = #{teacherCount},</if>
+            <if test="studentCount != null  ">student_count = #{studentCount},</if>
+            <if test="delFlag != null  and delFlag != ''  ">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCollegeById" parameterType="Integer">
+        delete from bus_college where id = #{id}
+    </delete>
+	
+    <delete id="deleteCollegeByIds" parameterType="String">
+        delete from bus_college where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

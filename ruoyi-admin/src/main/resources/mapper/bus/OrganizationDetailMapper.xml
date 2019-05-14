@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bus.mapper.OrganizationDetailMapper">
+    
+    <resultMap type="OrganizationDetail" id="OrganizationDetailResult">
+        <result property="id"    column="id"    />
+        <result property="organizationId"    column="organization_id"    />
+        <result property="organizationName"    column="organization_name"    />
+        <result property="stuId"    column="stu_id"    />
+        <result property="studentNumber"    column="student_number"    />
+        <result property="name"    column="name"    />
+        <result property="level"    column="level"    />
+        <result property="job"    column="job"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<sql id="selectOrganizationDetailVo">
+        select id, organization_id, stu_id, student_number, name, level, job, del_flag, create_by, create_time, update_by, update_time from bus_organization_detail
+    </sql>
+
+    <sql id="selectOrganizationDetail">
+        select bod.id, bod.organization_id, bo.name organization_name, bod.stu_id, bod.student_number, bod.name, bod.level, bod.job, bod.del_flag, bod.create_by, bod.create_time, bod.update_by, bod.update_time
+        from bus_organization_detail bod
+        left join bus_organization bo on bod.organization_id = bo.id
+    </sql>
+	
+    <select id="selectOrganizationDetailList" parameterType="OrganizationDetail" resultMap="OrganizationDetailResult">
+        <include refid="selectOrganizationDetail"/>
+        where bod.del_flag = 0
+            <if test="id != null "> and bod.id = #{id}</if>
+             <if test="organizationId != null and organizationId != ''" > and bod.organization_id = #{organizationId}</if>
+             <if test="organizationName != null and organizationName != ''" > and bo.name like concat('%', #{organizationName}, '%')</if>
+             <if test="stuId != null  and stuId != '' "> and bod.stu_id = #{stuId}</if>
+             <if test="studentNumber != null  and studentNumber != '' "> and bod.student_number = #{studentNumber}</if>
+             <if test="name != null  and name != '' "> and bod.name = #{name}</if>
+             <if test="level != null  and level != '' "> and bod.level = #{level}</if>
+             <if test="job != null  and job != '' "> and bod.job = #{job}</if>
+             <if test="delFlag != null  and delFlag != '' "> and bod.del_flag = #{delFlag}</if>
+             <if test="createBy != null  and createBy != '' "> and bod.create_by = #{createBy}</if>
+             <if test="createTime != null "> and bod.create_time = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and bod.update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and bod.update_time = #{updateTime}</if>
+        order by bod.level desc
+    </select>
+    
+    <select id="selectOrganizationDetailById" parameterType="Integer" resultMap="OrganizationDetailResult">
+        <include refid="selectOrganizationDetailVo"/>
+        where id = #{id}
+        and del_flag = 0
+    </select>
+
+    <select id="selectOrganizationDetailByStuId" parameterType="Integer" resultMap="OrganizationDetailResult">
+        <include refid="selectOrganizationDetailVo"/>
+        where stu_id = #{stuId}
+        and del_flag = 0
+    </select>
+
+    <select id="selectOrganizationDetailByOrganizationId" parameterType="Integer" resultMap="OrganizationDetailResult">
+        <include refid="selectOrganizationDetailVo"/>
+        where organization_id = #{organizationId}
+        and del_flag = 0
+    </select>
+        
+    <insert id="insertOrganizationDetail" parameterType="OrganizationDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_organization_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		    <if test="organizationId != null and organizationId != ''" >organization_id,</if>
+			<if test="stuId != null  and stuId != ''  ">stu_id,</if>
+			<if test="studentNumber != null  and studentNumber != ''  ">student_number,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="level != null  and level != ''  ">level,</if>
+			<if test="job != null  and job != ''  ">job,</if>
+			<if test="delFlag != null  and delFlag != ''  ">del_flag,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="organizationId != null and organizationId != ''" >#{organizationId},</if>
+            <if test="stuId != null  and stuId != ''  ">#{stuId},</if>
+            <if test="studentNumber != null  and studentNumber != ''  ">#{studentNumber},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="level != null  and level != ''  ">#{level},</if>
+			<if test="job != null  and job != ''  ">#{job},</if>
+			<if test="delFlag != null  and delFlag != ''  ">#{delFlag},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateOrganizationDetail" parameterType="OrganizationDetail">
+        update bus_organization_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="organizationId != null and organizationId != ''" >organization_id = #{organizationId},</if>
+            <if test="stuId != null  and stuId != ''  ">stu_id = #{stuId},</if>
+            <if test="studentNumber != null  and studentNumber != ''  ">student_number = #{studentNumber},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="level != null  and level != ''  ">level = #{level},</if>
+            <if test="job != null  and job != ''  ">job = #{job},</if>
+            <if test="delFlag != null  and delFlag != ''  ">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<update id="deleteOrganizationDetailById" parameterType="Integer">
+        update bus_organization_detail
+        set del_flag = 2
+        where id = #{id}
+    </update>
+	
+    <update id="deleteOrganizationDetailByIds" parameterType="String">
+        update bus_organization_detail
+        set del_flag = 2
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="deleteOrganizationDetailByStuId" parameterType="Integer">
+        update bus_organization_detail
+        set del_flag = 2
+        where stu_id = #{stuId}
+    </update>
+
+    <select id="selectLeaderByOrganizationId" parameterType="Integer" resultMap="OrganizationDetailResult">
+        <include refid="selectOrganizationDetailVo"/>
+        where organization_id = #{organizationId}
+        and `level` = '999'
+        and del_flag = 0
+    </select>
+    
+</mapper>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('社团列表')" />
+</head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								社团编码：<input type="text" name="organizationCode"/>
+							</li>
+
+							<li>
+								社团名称：<input type="text" name="name"/>
+							</li>
+
+							<li>
+								团长学号：<input type="text" name="studentNumber"/>
+							</li>
+
+							<li>
+								社团团长：<input type="text" name="leader"/>
+							</li>
+
+							<li>
+								社团人数：<input type="text" name="size"/>
+							</li>
+
+							<li>
+								社团经费：<input type="text" name="funds"/>
+							</li>
+
+							<li>
+								创建者：<input type="text" name="createBy"/>
+							</li>
+
+							<li>
+								创建时间：<input type="text" name="createTime"/>
+							</li>
+
+							<li>
+								更新者：<input type="text" name="updateBy"/>
+							</li>
+
+							<li>
+								更新时间：<input type="text" name="updateTime"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="bus:organization:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="bus:organization:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="bus:organization:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="bus:organization:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var applyFlag = [[${@permission.hasPermi('bus:organization:apply')}]];
+        var editFlag = [[${@permission.hasPermi('bus:organization:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('bus:organization:remove')}]];
+        var prefix = ctx + "bus/organization";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+				detailUrl: ctx + "bus/organizationDetail" + "/list",
+                createUrl: prefix + "/add",
+				applyUrl: prefix + "/apply",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "社团",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id', 
+					title : '主键id',
+					visible: false
+				},
+				{
+					field : 'organizationCode', 
+					title : '社团编码',
+					sortable: true,
+					/*formatter: function(value, row, index) {
+						var actions = [];
+						actions.push('<a href="#" onclick="$.operate.detailFull(\'' + row.id + '\')">' + row.organizationCode + '</a> ');
+						return actions.join('');
+					}*/
+				},
+				{
+					field : 'name', 
+					title : '社团名称',
+					sortable: true
+				},
+				{
+					field : 'studentNumber', 
+					title : '团长学号',
+					sortable: true
+				},
+				{
+					field : 'leader', 
+					title : '社团团长',
+					sortable: true
+				},
+				{
+					field : 'size', 
+					title : '社团人数',
+					sortable: true
+				},
+				{
+					field : 'funds', 
+					title : '社团经费',
+					sortable: true
+				},
+				{
+					field : 'createBy', 
+					title : '创建者',
+					sortable: true
+				},
+				{
+					field : 'createTime', 
+					title : '创建时间',
+					sortable: true
+				},
+				{
+					field : 'updateBy', 
+					title : '更新者',
+					sortable: true
+				},
+				{
+					field : 'updateTime', 
+					title : '更新时间',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-warning btn-xs ' + applyFlag + '" href="#" onclick="$.operate.apply(\'' + row.id + '\')"><i class="fa fa-plus"></i>申请</a> ');
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

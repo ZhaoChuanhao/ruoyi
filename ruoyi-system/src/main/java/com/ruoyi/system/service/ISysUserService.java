@@ -60,11 +60,19 @@ public interface ISysUserService
 
     /**
      * 通过用户ID查询用户
-     * 
+     *
      * @param userId 用户ID
      * @return 用户对象信息
      */
     public SysUser selectUserById(Long userId);
+
+    /**
+     * 通过学生ID查询用户
+     *
+     * @param stuId 学生ID
+     * @return 用户对象信息
+     */
+    public SysUser selectUserByStuId(Integer stuId);
 
     /**
      * 通过用户ID删除用户
@@ -114,6 +122,14 @@ public interface ISysUserService
      * @return 结果
      */
     public int resetUserPwd(SysUser user);
+
+    /**
+     * 校验学号是否唯一
+     *
+     * @param studentNumber 学号
+     * @return 结果
+     */
+    public String checkStudentNumberUnique(String studentNumber);
 
     /**
      * 校验用户名称是否唯一

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bus.mapper.StudentMapper">
+    
+    <resultMap type="Student" id="StudentResult">
+        <result property="id"    column="id"    />
+        <result property="studentNumber"    column="student_number"    />
+        <result property="name"    column="name"    />
+        <result property="sex"    column="sex"    />
+        <result property="collegeId"    column="college_id"    />
+        <result property="classId"    column="class_id"    />
+        <result property="organizationId"    column="organization_id"    />
+        <result property="organizationName"    column="organization_name"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<sql id="selectStudentVo">
+        select bs.id, bs.student_number, bs.name, bs.sex, bs.college_id, bs.class_id, bs.organization_id, bo.name organization_name, bs.del_flag, bs.create_by, bs.create_time, bs.update_by, bs.update_time
+        from bus_student bs
+        left join bus_organization bo on bs.organization_id = bo.id
+    </sql>
+	
+    <select id="selectStudentList" parameterType="Student" resultMap="StudentResult">
+        <include refid="selectStudentVo"/>
+        <where>  
+            <if test="id != null "> and bs.id = #{id}</if>
+             <if test="studentNumber != null  and studentNumber != '' "> and bs.student_number = #{studentNumber}</if>
+             <if test="name != null  and name != '' "> and bs.name = #{name}</if>
+             <if test="sex != null  and sex != '' "> and bs.sex = #{sex}</if>
+             <if test="collegeId != null  and collegeId != '' "> and bs.college_id = #{collegeId}</if>
+             <if test="classId != null  and classId != '' "> and bs.class_id = #{classId}</if>
+             <if test="organizationId != null "> and bs.organization_id = #{organizationId}</if>
+             <if test="organizationName != null and organizationName != '' "> and bo.name = #{organizationName}</if>
+             <if test="delFlag != null  and delFlag != '' "> and bs.del_flag = #{delFlag}</if>
+             <if test="createBy != null  and createBy != '' "> and bs.create_by = #{createBy}</if>
+             <if test="createTime != null "> and bs.create_time = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and bs.update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and bs.update_time = #{updateTime}</if>
+         </where>
+    </select>
+    
+    <select id="selectStudentById" parameterType="Integer" resultMap="StudentResult">
+        <include refid="selectStudentVo"/>
+        where bs.id = #{id}
+    </select>
+
+    <select id="selectStudentByStudentNumber" parameterType="String" resultMap="StudentResult">
+        <include refid="selectStudentVo"/>
+        where bs.student_number = #{studentNumber}
+    </select>
+        
+    <insert id="insertStudent" parameterType="Student" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_student
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="studentNumber != null  and studentNumber != ''  ">student_number,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="sex != null  and sex != ''  ">sex,</if>
+			<if test="collegeId != null  and collegeId != ''  ">college_id,</if>
+			<if test="classId != null  and classId != ''  ">class_id,</if>
+			<if test="organizationId != null  ">organization_id,</if>
+			<if test="delFlag != null  and delFlag != ''  ">del_flag,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="studentNumber != null  and studentNumber != ''  ">#{studentNumber},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="sex != null  and sex != ''  ">#{sex},</if>
+			<if test="collegeId != null  and collegeId != ''  ">#{collegeId},</if>
+			<if test="classId != null  and classId != ''  ">#{classId},</if>
+			<if test="organizationId != null  ">#{organizationId},</if>
+			<if test="delFlag != null  and delFlag != ''  ">#{delFlag},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateStudent" parameterType="Student">
+        update bus_student
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentNumber != null  and studentNumber != ''  ">student_number = #{studentNumber},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="sex != null  and sex != ''  ">sex = #{sex},</if>
+            <if test="collegeId != null  and collegeId != ''  ">college_id = #{collegeId},</if>
+            <if test="classId != null  and classId != ''  ">class_id = #{classId},</if>
+            <if test="organizationId != null">organization_id = #{organizationId},</if>
+            <if test="delFlag != null  and delFlag != ''  ">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateStudentOrganizationId" parameterType="Student">
+        update bus_student
+        set organization_id = #{organizationId}
+        where id = #{id}
+    </update>
+
+	<delete id="deleteStudentById" parameterType="Integer">
+        delete from bus_student where id = #{id}
+    </delete>
+	
+    <delete id="deleteStudentByIds" parameterType="String">
+        delete from bus_student where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

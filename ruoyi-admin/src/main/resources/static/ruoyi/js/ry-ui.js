@@ -582,6 +582,47 @@
                     }
                 });
             },
+			// 弹出层全屏
+			myOpenFull: function (title, url, width, height) {
+				//如果是移动端，就使用自适应大小弹窗
+				if (navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)) {
+					width = 'auto';
+					height = 'auto';
+				}
+				if ($.common.isEmpty(title)) {
+					title = false;
+				};
+				if ($.common.isEmpty(url)) {
+					url = "/404.html";
+				};
+				if ($.common.isEmpty(width)) {
+					width = 800;
+				};
+				if ($.common.isEmpty(height)) {
+					height = ($(window).height() - 50);
+				};
+				var index = layer.open({
+					type: 2,
+					area: [width + 'px', height + 'px'],
+					fix: false,
+					//不固定
+					maxmin: true,
+					shade: 0.3,
+					title: title,
+					content: url,
+					// btn: ['确定', '关闭'],
+					// 弹层外区域关闭
+					shadeClose: true,
+					yes: function(index, layero) {
+						var iframeWin = layero.find('iframe')[0];
+						iframeWin.contentWindow.submitHandler();
+					},
+					cancel: function(index) {
+						return true;
+					}
+				});
+				layer.full(index);
+			},
             // 弹出层全屏
             openFull: function (title, url, width, height) {
             	//如果是移动端，就使用自适应大小弹窗
@@ -705,6 +746,79 @@
          	        }
             	});
             },
+			// 同意信息
+			agree: function(id) {
+				$.modal.confirm("确定同意吗？", function() {
+					var url = $.common.isEmpty(id) ? $.table._option.agreeUrl : $.table._option.agreeUrl.replace("{id}", id);
+					if($.table._option.type == table_type.bootstrapTreeTable) {
+						$.operate.get(url);
+					} else {
+						var data = { "ids": id };
+						$.operate.submit(url, "post", "json", data);
+					}
+				});
+
+			},
+			// 拒绝信息
+			reject: function(id) {
+				$.modal.confirm("确定拒绝吗？", function() {
+					var url = $.common.isEmpty(id) ? $.table._option.rejectUrl : $.table._option.rejectUrl.replace("{id}", id);
+					if($.table._option.type == table_type.bootstrapTreeTable) {
+						$.operate.get(url);
+					} else {
+						var data = { "ids": id };
+						$.operate.submit(url, "post", "json", data);
+					}
+				});
+
+			},
+            // 升职信息
+            promote: function(id) {
+                $.modal.confirm("确定升职该成员吗？", function() {
+                    var url = $.common.isEmpty(id) ? $.table._option.promoteUrl : $.table._option.promoteUrl.replace("{id}", id);
+                    if($.table._option.type == table_type.bootstrapTreeTable) {
+                        $.operate.get(url);
+                    } else {
+                        var data = { "id": id };
+                        $.operate.submit(url, "post", "json", data);
+                    }
+                });
+            },
+            // 降职信息
+            demote: function(id) {
+                $.modal.confirm("确定降职该成员吗？", function() {
+                    var url = $.common.isEmpty(id) ? $.table._option.demoteUrl : $.table._option.demoteUrl.replace("{id}", id);
+                    if($.table._option.type == table_type.bootstrapTreeTable) {
+                        $.operate.get(url);
+                    } else {
+                        var data = { "id": id };
+                        $.operate.submit(url, "post", "json", data);
+                    }
+                });
+
+            },
+            // 踢出信息
+            kick: function(id) {
+                $.modal.confirm("确定踢出该成员吗？", function() {
+                    var url = $.common.isEmpty(id) ? $.table._option.kickUrl : $.table._option.kickUrl.replace("{id}", id);
+                    if($.table._option.type == table_type.bootstrapTreeTable) {
+                        $.operate.get(url);
+                    } else {
+                        var data = { "id": id };
+                        $.operate.submit(url, "post", "json", data);
+                    }
+                });
+
+            },
+            // 退出信息
+            exit: function() {
+                $.modal.confirm("确定申请退出社团吗？", function() {
+                    var url = ctx + "bus/apply/exit";
+                    $.operate.get(url);
+                    // $.operate.submit(url, "post", "json", null);
+                });
+
+            },
             // 删除信息
             remove: function(id) {
             	$.modal.confirm("确定删除该条" + $.table._option.modalName + "信息吗？", function() {
@@ -756,6 +870,49 @@
             	var url = $.common.isEmpty(id) ? $.table._option.createUrl : $.table._option.createUrl.replace("{id}", id);
                 return url;
             },
+			// 申请社团
+			apply: function(id) {
+				$.modal.confirm("确定申请该社团吗？", function() {
+					var url = $.common.isEmpty(id) ? $.table._option.applyUrl : $.table._option.applyUrl.replace("{id}", id);
+					if($.table._option.type == table_type.bootstrapTreeTable) {
+						$.operate.get(url);
+						console.log(url)
+					} else {
+						var data = { "id": id };
+						console.log(url)
+						$.operate.submit(url, "post", "json", data);
+					}
+				});
+			},
+			// 查看详情
+			detailFull: function(id) {
+				if($.common.isEmpty(id) && $.table._option.type == table_type.bootstrapTreeTable) {
+					var row = $('#' + $.table._option.id).bootstrapTreeTable('getSelections')[0];
+					if ($.common.isEmpty(row)) {
+						$.modal.alertWarning("请至少选择一条记录");
+						return;
+					}
+					var url = $.table._option.detailUrl.replace("{id}", row[$.table._option.uniqueId]);
+					$.modal.myOpenFull($.table._option.modalName + "详情", url);
+				} else {
+					$.modal.myOpenFull($.table._option.modalName + "详情", $.operate.detailUrl(id));
+				}
+			},
+			// 详情访问地址
+			detailUrl: function(id) {
+				var url = "/404.html";
+				if ($.common.isNotEmpty(id)) {
+					url = $.table._option.detailUrl.replace("{id}", id);
+				} else {
+					var id = $.common.isEmpty($.table._option.uniqueId) ? $.table.selectFirstColumns() : $.table.selectColumns($.table._option.uniqueId);
+					if (id.length == 0) {
+						$.modal.alertWarning("请至少选择一条记录");
+						return;
+					}
+					url = $.table._option.detailUrl.replace("{id}", id);
+				}
+				return url;
+			},
             // 修改信息
             edit: function(id) {
             	if($.common.isEmpty(id) && $.table._option.type == table_type.bootstrapTreeTable) {

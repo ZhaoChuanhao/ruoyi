@@ -1,7 +1,11 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.system.domain.*;
+import com.ruoyi.system.service.ISysStudentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +17,6 @@ import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.exception.BusinessException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.security.Md5Utils;
-import com.ruoyi.system.domain.SysPost;
-import com.ruoyi.system.domain.SysRole;
-import com.ruoyi.system.domain.SysUser;
-import com.ruoyi.system.domain.SysUserPost;
-import com.ruoyi.system.domain.SysUserRole;
 import com.ruoyi.system.mapper.SysPostMapper;
 import com.ruoyi.system.mapper.SysRoleMapper;
 import com.ruoyi.system.mapper.SysUserMapper;
@@ -53,6 +52,12 @@ public class SysUserServiceImpl implements ISysUserService
 
     @Autowired
     private ISysConfigService configService;
+
+    @Autowired
+    private ISysStudentService studentService;
+
+    @Autowired
+    private ISysUserService userService;
 
     /**
      * 根据条件分页查询用户列表
@@ -137,6 +142,16 @@ public class SysUserServiceImpl implements ISysUserService
     public SysUser selectUserById(Long userId)
     {
         return userMapper.selectUserById(userId);
+    }
+
+    /**
+     * 通过学生ID查询用户
+     * @param stuId 学生ID
+     * @return 用户对象信息
+     */
+    @Override
+    public SysUser selectUserByStuId(Integer stuId) {
+        return userMapper.selectUserByStuId(stuId);
     }
 
     /**
@@ -293,6 +308,23 @@ public class SysUserServiceImpl implements ISysUserService
     }
 
     /**
+     * 校验学号是否唯一
+     *
+     * @param studentNumber 学号
+     * @return
+     */
+    @Override
+    public String checkStudentNumberUnique(String studentNumber)
+    {
+        int count = userMapper.checkStudentNumberUnique(studentNumber);
+        if (count > 0)
+        {
+            return UserConstants.STUDENT_NUMBER_NOT_UNIQUE;
+        }
+        return UserConstants.STUDENT_NUMBER_UNIQUE;
+    }
+
+    /**
      * 校验用户名称是否唯一
      * 
      * @param loginName 用户名
@@ -409,6 +441,7 @@ public class SysUserServiceImpl implements ISysUserService
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
         String password = configService.selectConfigByKey("sys.user.initPassword");
+        List<SysUserRole> list = new ArrayList<>();
         for (SysUser user : userList)
         {
             try
@@ -417,6 +450,27 @@ public class SysUserServiceImpl implements ISysUserService
                 SysUser u = userMapper.selectUserByLoginName(user.getLoginName());
                 if (StringUtils.isNull(u))
                 {
+                    // 用户为空，验证是否存在该学生
+                    SysStudent student = studentService.selectStudentByStudentNumber(user.getStudentNumber());
+                    // 如果学生为空，则添加该学生，并与该用户绑定
+                    if (student == null){
+                        // 封装学生信息并添加
+                        SysStudent sysStudent = new SysStudent();
+                        sysStudent.setStudentNumber(user.getStudentNumber());
+                        sysStudent.setName(user.getName());
+                        sysStudent.setSex(user.getSex());
+                        sysStudent.setCreateBy("admin");
+                        sysStudent.setUpdateBy("admin");
+                        sysStudent.setCreateTime(new Date());
+                        sysStudent.setUpdateTime(sysStudent.getCreateTime());
+                        studentService.insertStudent(sysStudent);
+
+                        // 与该用户绑定
+                        user.setStuId(sysStudent.getId());
+                    }else {
+                        // 否则将该学生与用户绑定
+                        user.setStuId(student.getId());
+                    }
                     user.setPassword(Md5Utils.hash(user.getLoginName() + password));
                     user.setCreateBy(operName);
                     this.insertUser(user);
@@ -425,6 +479,27 @@ public class SysUserServiceImpl implements ISysUserService
                 }
                 else if (isUpdateSupport)
                 {
+                    // 验证是否存在该学生
+                    SysStudent student = studentService.selectStudentByStudentNumber(user.getStudentNumber());
+                    // 如果学生为空，则添加该学生，并与该用户绑定
+                    if (student == null){
+                        // 封装学生信息并添加
+                        SysStudent sysStudent = new SysStudent();
+                        sysStudent.setStudentNumber(user.getStudentNumber());
+                        sysStudent.setName(user.getName());
+                        sysStudent.setSex(user.getSex());
+                        sysStudent.setCreateBy("admin");
+                        sysStudent.setUpdateBy("admin");
+                        sysStudent.setCreateTime(new Date());
+                        sysStudent.setUpdateTime(sysStudent.getCreateTime());
+                        studentService.insertStudent(sysStudent);
+
+                        // 与该用户绑定
+                        user.setStuId(sysStudent.getId());
+                    }else {
+                        // 否则将该学生与用户绑定
+                        user.setStuId(student.getId());
+                    }
                     user.setUpdateBy(operName);
                     this.updateUser(user);
                     successNum++;
@@ -435,6 +510,12 @@ public class SysUserServiceImpl implements ISysUserService
                     failureNum++;
                     failureMsg.append("<br/>" + failureNum + "、账号 " + user.getLoginName() + " 已存在");
                 }
+
+                // 为新增用户分配默认学生权限
+                SysUserRole userRole = new SysUserRole();
+                userRole.setUserId(user.getUserId());
+                userRole.setRoleId(2L);
+                list.add(userRole);
             }
             catch (Exception e)
             {
@@ -444,6 +525,8 @@ public class SysUserServiceImpl implements ISysUserService
                 log.error(msg, e);
             }
         }
+        // 新增角色权限
+        userRoleMapper.batchUserRole(list);
         if (failureNum > 0)
         {
             failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");

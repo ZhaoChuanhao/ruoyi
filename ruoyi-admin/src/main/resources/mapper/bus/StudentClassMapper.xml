@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bus.mapper.StudentClassMapper">
+    
+    <resultMap type="StudentClass" id="StudentClassResult">
+        <result property="id"    column="id"    />
+        <result property="classNumber"    column="class_number"    />
+        <result property="size"    column="size"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<sql id="selectStudentClassVo">
+        select id, class_number, size, del_flag, create_by, create_time, update_by, update_time from bus_student_class
+    </sql>
+	
+    <select id="selectStudentClassList" parameterType="StudentClass" resultMap="StudentClassResult">
+        <include refid="selectStudentClassVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="classNumber != null "> and class_number = #{classNumber}</if>
+             <if test="size != null "> and size = #{size}</if>
+             <if test="delFlag != null  and delFlag != '' "> and del_flag = #{delFlag}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+         </where>
+    </select>
+    
+    <select id="selectStudentClassById" parameterType="Integer" resultMap="StudentClassResult">
+        <include refid="selectStudentClassVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStudentClass" parameterType="StudentClass" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_student_class
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="classNumber != null  ">class_number,</if>
+			<if test="size != null  ">size,</if>
+			<if test="delFlag != null  and delFlag != ''  ">del_flag,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="classNumber != null  ">#{classNumber},</if>
+			<if test="size != null  ">#{size},</if>
+			<if test="delFlag != null  and delFlag != ''  ">#{delFlag},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateStudentClass" parameterType="StudentClass">
+        update bus_student_class
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="classNumber != null  ">class_number = #{classNumber},</if>
+            <if test="size != null  ">size = #{size},</if>
+            <if test="delFlag != null  and delFlag != ''  ">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteStudentClassById" parameterType="Integer">
+        delete from bus_student_class where id = #{id}
+    </delete>
+	
+    <delete id="deleteStudentClassByIds" parameterType="String">
+        delete from bus_student_class where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,6 +1,9 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.SysStudent;
+import com.ruoyi.system.service.ISysStudentService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,6 +50,9 @@ public class SysUserController extends BaseController
 
     @Autowired
     private SysPasswordService passwordService;
+
+    @Autowired
+    private ISysStudentService studentService;
 
     @RequiresPermissions("system:user:view")
     @GetMapping()
@@ -125,6 +131,18 @@ public class SysUserController extends BaseController
         user.setSalt(ShiroUtils.randomSalt());
         user.setPassword(passwordService.encryptPassword(user.getLoginName(), user.getPassword(), user.getSalt()));
         user.setCreateBy(ShiroUtils.getLoginName());
+        // 根据学号判断是否有该学生
+        SysStudent student = studentService.selectStudentByStudentNumber(user.getStudentNumber());
+        // 如果有该学生，则判断该学生是否已注册账号
+        if (student != null){
+            SysUser sysUser = userService.selectUserByStuId(student.getId());
+            // 如果该学生已注册账号，则用户新增失败
+            if (sysUser != null){
+                return AjaxResult.error("该学生已注册账号！");
+            }
+            // 否则将该学生与用户绑定
+            user.setStuId(student.getId());
+        }
         return toAjax(userService.insertUser(user));
     }
 
@@ -191,6 +209,16 @@ public class SysUserController extends BaseController
         {
             return error(e.getMessage());
         }
+    }
+
+    /**
+     * 校验学号
+     */
+    @PostMapping("/checkStudentNumberUnique")
+    @ResponseBody
+    public String checkStudentNumberUnique(SysUser user)
+    {
+        return userService.checkStudentNumberUnique(user.getStudentNumber());
     }
 
     /**

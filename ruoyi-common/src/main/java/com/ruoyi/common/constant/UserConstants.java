@@ -33,6 +33,10 @@ public class UserConstants
     public static final int USERNAME_MIN_LENGTH = 2;
     public static final int USERNAME_MAX_LENGTH = 20;
 
+    /** 学号是否唯一的返回结果码 */
+    public final static String STUDENT_NUMBER_UNIQUE = "0";
+    public final static String STUDENT_NUMBER_NOT_UNIQUE = "1";
+
     /** 登录名称是否唯一的返回结果码 */
     public final static String USER_NAME_UNIQUE = "0";
     public final static String USER_NAME_NOT_UNIQUE = "1";

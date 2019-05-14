@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bus.mapper.ApplyMapper">
+    
+    <resultMap type="Apply" id="ApplyResult">
+        <result property="id"    column="id"    />
+        <result property="stuId"    column="stu_id"    />
+        <result property="studentNumber"    column="student_number"    />
+        <result property="name"    column="name"    />
+        <result property="sex"    column="sex"    />
+        <result property="organizationId"    column="organization_id"    />
+        <result property="organizationCode"    column="organization_code"    />
+        <result property="organizationName"    column="organization_name"    />
+        <result property="applyType"    column="apply_type"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<sql id="selectApplyVo">
+        select id, stu_id, student_number, name, sex, organization_id, organization_code, organization_name, apply_type, del_flag, create_by, create_time, update_by, update_time from bus_apply
+    </sql>
+	
+    <select id="selectApplyList" parameterType="Apply" resultMap="ApplyResult">
+        <include refid="selectApplyVo"/>
+        where del_flag = 0
+            <if test="id != null "> and id = #{id}</if>
+             <if test="stuId != null and stuId != ''" > and stu_id = #{stuId}</if>
+             <if test="studentNumber != null  and studentNumber != '' "> and student_number = #{studentNumber}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="sex != null and sex != ''" > and sex = #{sex}</if>
+             <if test="organizationId != null and organizationId != '' " > and organization_id = #{organizationId}</if>
+             <if test="organizationCode != null  and organizationCode != '' "> and organization_code = #{organizationCode}</if>
+             <if test="organizationName != null  and organizationName != '' "> and organization_name = #{organizationName}</if>
+             <if test="applyType != null  and applyType != '' "> and apply_type = #{applyType}</if>
+             <if test="delFlag != null  and delFlag != '' "> and del_flag = #{delFlag}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+    </select>
+    
+    <select id="selectApplyById" parameterType="Integer" resultMap="ApplyResult">
+        <include refid="selectApplyVo"/>
+        where id = #{id}
+        and del_flag = 0
+    </select>
+        
+    <insert id="insertApply" parameterType="Apply" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_apply
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="stuId != null and stuId != '' " >stu_id,</if>
+			<if test="studentNumber != null  and studentNumber != ''  ">student_number,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="sex != null and sex != '' " >sex,</if>
+            <if test="organizationId != null  and organizationId != ''  ">organization_id,</if>
+            <if test="organizationCode != null  and organizationCode != ''  ">organization_code,</if>
+			<if test="organizationName != null  and organizationName != ''  ">organization_name,</if>
+			<if test="applyType != null ">apply_type,</if>
+			<if test="delFlag != null  and delFlag != ''  ">del_flag,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="stuId != null and stuId != '' " >#{stuId},</if>
+			<if test="studentNumber != null  and studentNumber != ''  ">#{studentNumber},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+            <if test="sex != null and sex != '' " >#{sex},</if>
+            <if test="organizationId != null  and organizationId != ''  ">#{organizationId},</if>
+			<if test="organizationCode != null  and organizationCode != ''  ">#{organizationCode},</if>
+			<if test="organizationName != null  and organizationName != ''  ">#{organizationName},</if>
+			<if test="applyType != null ">#{applyType},</if>
+			<if test="delFlag != null  and delFlag != ''  ">#{delFlag},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateApply" parameterType="Apply">
+        update bus_apply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stuId != null and stuId != '' " >stu_id = #{stuId},</if>
+            <if test="studentNumber != null  and studentNumber != ''  ">student_number = #{studentNumber},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="sex != null and sex != '' " >sex = #{sex},</if>
+            <if test="organizationId != null  and organizationId != ''  ">organization_id = #{organizationId},</if>
+            <if test="organizationCode != null  and organizationCode != ''  ">organization_code = #{organizationCode},</if>
+            <if test="organizationName != null  and organizationName != ''  ">organization_name = #{organizationName},</if>
+            <if test="applyType != null  and applyType != ''  ">apply_type = #{applyType},</if>
+            <if test="delFlag != null  and delFlag != ''  ">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<update id="deleteApplyById" parameterType="Integer">
+        update bus_apply
+        set del_flag = 2
+        where id = #{id}
+    </update>
+	
+    <update id="deleteApplyByIds" parameterType="String">
+        update bus_apply
+        set del_flag = 2
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

@@ -5,27 +5,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.system.mapper.SysUserMapper">
 
 	<resultMap type="SysUser" id="SysUserResult">
-		<id     property="userId"       column="user_id"      />
-		<result property="deptId"       column="dept_id"      />
-		<result property="loginName"    column="login_name"   />
-		<result property="userName"     column="user_name"    />
-		<result property="email"        column="email"        />
-		<result property="phonenumber"  column="phonenumber"  />
-		<result property="sex"          column="sex"          />
-		<result property="avatar"       column="avatar"       />
-		<result property="password"     column="password"     />
-		<result property="salt"         column="salt"         />
-		<result property="status"       column="status"       />
-		<result property="delFlag"      column="del_flag"     />
-		<result property="loginIp"      column="login_ip"     />
-		<result property="loginDate"    column="login_date"   />
-		<result property="createBy"     column="create_by"    />
-		<result property="createTime"   column="create_time"  />
-		<result property="updateBy"     column="update_by"    />
-		<result property="updateTime"   column="update_time"  />
-		<result property="remark"       column="remark"       />
-		<association property="dept"    column="dept_id" javaType="SysDept" resultMap="deptResult" />
-		<collection  property="roles"   javaType="java.util.List"        resultMap="RoleResult" />
+		<id     property="userId"           column="user_id"           />
+		<result property="stuId"            column="stu_id"            />
+		<result property="studentNumber"    column="student_number"    />
+		<result property="name"             column="name"              />
+		<result property="organizationName" column="organization_name" />
+		<result property="deptId"           column="dept_id"           />
+		<result property="loginName"        column="login_name"        />
+		<result property="userName"         column="user_name"         />
+		<result property="email"            column="email"             />
+		<result property="phonenumber"      column="phonenumber"       />
+		<result property="sex"              column="sex"               />
+		<result property="avatar"           column="avatar"            />
+		<result property="password"         column="password"          />
+		<result property="salt"             column="salt"              />
+		<result property="status"           column="status"            />
+		<result property="delFlag"          column="del_flag"          />
+		<result property="loginIp"          column="login_ip"          />
+		<result property="loginDate"        column="login_date"        />
+		<result property="createBy"         column="create_by"         />
+		<result property="createTime"       column="create_time"       />
+		<result property="updateBy"         column="update_by"         />
+		<result property="updateTime"       column="update_time"       />
+		<result property="remark"           column="remark"            />
+		<association property="dept"        column="dept_id" javaType="SysDept" resultMap="deptResult" />
+		<collection  property="roles"       javaType="java.util.List"           resultMap="RoleResult" />
 	</resultMap>
 	
 	<resultMap id="deptResult" type="SysDept">
@@ -48,16 +52,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<sql id="selectUserVo">
         select  u.user_id, u.dept_id, u.login_name, u.user_name, u.email, u.phonenumber, u.sex, u.avatar, u.password, u.salt, u.status, u.del_flag, u.login_ip, u.login_date, u.create_time, u.remark,
        		    d.dept_id, d.parent_id, d.dept_name, d.order_num, d.status as dept_status,
-       		    r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status
+       		    r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status,
+       		    s.id stu_id, s.student_number, s.name,
+       		    o.name organization_name
 		from sys_user u
 			 left join sys_dept d on u.dept_id = d.dept_id
 			 left join sys_user_role ur on u.user_id = ur.user_id
 			 left join sys_role r on r.role_id = ur.role_id
+			 left join bus_student s on u.stu_id = s.id
+			 left join bus_organization o on o.id = s.organization_id
     </sql>
 	
 	<select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
-		select u.user_id, u.dept_id, u.login_name, u.user_name, u.email, u.phonenumber, u.password, u.sex, u.avatar, u.salt, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name from sys_user u
+		select  u.user_id, u.stu_id, u.dept_id, u.login_name, u.user_name, u.email, u.phonenumber, u.password, u.sex, u.avatar, u.salt, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name,
+				s.id stu_id, s.student_number, s.name,
+				o.name organization_name
+		from sys_user u
 		left join sys_dept d on u.dept_id = d.dept_id
+		left join bus_student s on u.stu_id = s.id
+		left join bus_organization o on o.id = s.organization_id
 		where u.del_flag = '0'
 		<if test="loginName != null and loginName != ''">
 			AND u.login_name like concat('%', #{loginName}, '%')
@@ -82,7 +95,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="selectAllocatedList" parameterType="SysUser" resultMap="SysUserResult">
-	    select distinct u.user_id, u.dept_id, u.login_name, u.user_name, u.email, u.phonenumber, u.status, u.create_time
+	    select distinct u.user_id, u.stu_id, u.dept_id, u.login_name, u.user_name, u.email, u.phonenumber, u.status, u.create_time
 	    from sys_user u
 			 left join sys_dept d on u.dept_id = d.dept_id
 			 left join sys_user_role ur on u.user_id = ur.user_id
@@ -99,7 +112,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="selectUnallocatedList" parameterType="SysUser" resultMap="SysUserResult">
-	    select distinct u.user_id, u.dept_id, u.login_name, u.user_name, u.email, u.phonenumber, u.status, u.create_time
+	    select distinct u.user_id, u.stu_id, u.dept_id, u.login_name, u.user_name, u.email, u.phonenumber, u.status, u.create_time
 	    from sys_user u
 			 left join sys_dept d on u.dept_id = d.dept_id
 			 left join sys_user_role ur on u.user_id = ur.user_id
@@ -130,7 +143,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    <include refid="selectUserVo"/>
 		where u.email = #{email}
 	</select>
-	
+
+	<select id="checkStudentNumberUnique" parameterType="String" resultType="int">
+		select count(1)
+		from sys_user su
+		left join bus_student bs on su.stu_id = bs.id
+		where bs.student_number = #{studentNumber}
+	</select>
+
 	<select id="checkLoginNameUnique" parameterType="String" resultType="int">
 		select count(1) from sys_user where login_name=#{loginName}
 	</select>
@@ -147,6 +167,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<include refid="selectUserVo"/>
 		where u.user_id = #{userId}
 	</select>
+
+	<select id="selectUserByStuId" parameterType="Integer" resultMap="SysUserResult">
+		<include refid="selectUserVo"/>
+		where s.id = #{stuId}
+	</select>
 	
 	<delete id="deleteUserById" parameterType="Long">
  		delete from sys_user where user_id = #{userId}
@@ -162,6 +187,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  	<update id="updateUser" parameterType="SysUser">
  		update sys_user
  		<set>
+ 			<if test="stuId != null and stuId != 0">stu_id = #{stuId},</if>
  			<if test="deptId != null and deptId != 0">dept_id = #{deptId},</if>
  			<if test="loginName != null and loginName != ''">login_name = #{loginName},</if>
  			<if test="userName != null and userName != ''">user_name = #{userName},</if>
@@ -184,6 +210,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  	<insert id="insertUser" parameterType="SysUser" useGeneratedKeys="true" keyProperty="userId">
  		insert into sys_user(
  			<if test="userId != null and userId != 0">user_id,</if>
+ 			<if test="stuId != null and stuId != 0">stu_id,</if>
  			<if test="deptId != null and deptId != 0">dept_id,</if>
  			<if test="loginName != null and loginName != ''">login_name,</if>
  			<if test="userName != null and userName != ''">user_name,</if>
@@ -195,9 +222,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="status != null and status != ''">status,</if>
  			<if test="createBy != null and createBy != ''">create_by,</if>
  			<if test="remark != null and remark != ''">remark,</if>
- 			create_time
+ 			create_time,
+ 			update_time
  		)values(
  			<if test="userId != null and userId != ''">#{userId},</if>
+ 			<if test="stuId != null and stuId != ''">#{stuId},</if>
  			<if test="deptId != null and deptId != ''">#{deptId},</if>
  			<if test="loginName != null and loginName != ''">#{loginName},</if>
  			<if test="userName != null and userName != ''">#{userName},</if>
@@ -209,7 +238,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			<if test="status != null and status != ''">#{status},</if>
  			<if test="createBy != null and createBy != ''">#{createBy},</if>
  			<if test="remark != null and remark != ''">#{remark},</if>
- 			sysdate()
+ 			sysdate(),
+			sysdate()
  		)
 	</insert>
 	
