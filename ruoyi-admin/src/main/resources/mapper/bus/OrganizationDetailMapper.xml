@@ -38,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="organizationName != null and organizationName != ''" > and bo.name like concat('%', #{organizationName}, '%')</if>
              <if test="stuId != null  and stuId != '' "> and bod.stu_id = #{stuId}</if>
              <if test="studentNumber != null  and studentNumber != '' "> and bod.student_number = #{studentNumber}</if>
-             <if test="name != null  and name != '' "> and bod.name = #{name}</if>
+             <if test="name != null  and name != '' "> and bod.name like concat('%', #{name}, '%')</if>
              <if test="level != null  and level != '' "> and bod.level = #{level}</if>
              <if test="job != null  and job != '' "> and bod.job = #{job}</if>
              <if test="delFlag != null  and delFlag != '' "> and bod.del_flag = #{delFlag}</if>

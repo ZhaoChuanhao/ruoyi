@@ -27,7 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectActivityVo"/>
         <where>  
             <if test="id != null "> and id = #{id}</if>
-             <if test="title != null  and title != '' "> and title = #{title}</if>
+             <if test="title != null  and title != '' "> and title like concat('%', #{title}, '%')</if>
              <if test="content != null  and content != '' "> and content = #{content}</if>
              <if test="date != null "> and date = #{date}</if>
              <if test="place != null  and place != '' "> and place = #{place}</if>

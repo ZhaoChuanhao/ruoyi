@@ -28,9 +28,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where del_flag = 0
          <if test="id != null "> and id = #{id}</if>
          <if test="organizationCode != null  and organizationCode != '' "> and organization_code = #{organizationCode}</if>
-         <if test="name != null  and name != '' "> and name = #{name}</if>
+         <if test="name != null  and name != '' "> and name like concat('%', #{name}, '%') </if>
          <if test="studentNumber != null  and studentNumber != '' "> and student_number = #{studentNumber}</if>
-         <if test="leader != null  and leader != '' "> and leader = #{leader}</if>
+         <if test="leader != null  and leader != '' "> and leader like concat('%', #{leader}, '%')</if>
          <if test="size != null "> and size = #{size}</if>
          <if test="funds != null "> and funds = #{funds}</if>
          <if test="delFlag != null  and delFlag != '' "> and del_flag = #{delFlag}</if>

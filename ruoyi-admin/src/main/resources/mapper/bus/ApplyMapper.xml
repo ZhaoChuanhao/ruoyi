@@ -31,11 +31,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null "> and id = #{id}</if>
              <if test="stuId != null and stuId != ''" > and stu_id = #{stuId}</if>
              <if test="studentNumber != null  and studentNumber != '' "> and student_number = #{studentNumber}</if>
-             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="name != null  and name != '' "> and name like concat('%', #{name}, '%')</if>
              <if test="sex != null and sex != ''" > and sex = #{sex}</if>
              <if test="organizationId != null and organizationId != '' " > and organization_id = #{organizationId}</if>
              <if test="organizationCode != null  and organizationCode != '' "> and organization_code = #{organizationCode}</if>
-             <if test="organizationName != null  and organizationName != '' "> and organization_name = #{organizationName}</if>
+             <if test="organizationName != null  and organizationName != '' "> and organization_name like concat('%', #{organizationName}, '%')</if>
              <if test="applyType != null  and applyType != '' "> and apply_type = #{applyType}</if>
              <if test="delFlag != null  and delFlag != '' "> and del_flag = #{delFlag}</if>
              <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
