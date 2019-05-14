@@ -61,7 +61,7 @@ public class SysUser extends BaseEntity
     private String phonenumber;
 
     /** 用户性别 */
-    @Excel(name = "用户性别", readConverterExp = "0=男,1=女,2=未知")
+    /*@Excel(name = "用户性别", readConverterExp = "0=男,1=女,2=未知")*/
     private String sex;
 
     /** 用户头像 */
@@ -81,11 +81,11 @@ public class SysUser extends BaseEntity
     private String delFlag;
 
     /** 最后登陆IP */
-    @Excel(name = "最后登陆IP", type = Type.EXPORT)
+    /*@Excel(name = "最后登陆IP", type = Type.EXPORT)*/
     private String loginIp;
 
     /** 最后登陆时间 */
-    @Excel(name = "最后登陆时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss", type = Type.EXPORT)
+    /*@Excel(name = "最后登陆时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss", type = Type.EXPORT)*/
     private Date loginDate;
 
     /** 部门对象 */

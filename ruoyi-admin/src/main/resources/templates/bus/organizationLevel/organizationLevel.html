@@ -11,9 +11,6 @@
 				<form id="formId">
 					<div class="select-list">
 						<ul>
-							<li>
-								社团id：<input type="text" name="organizationId"/>
-							</li>
 
 							<li>
 								职级：<input type="text" name="level"/>
@@ -21,22 +18,6 @@
 
 							<li>
 								职务：<input type="text" name="job"/>
-							</li>
-
-							<li>
-								创建者：<input type="text" name="createBy"/>
-							</li>
-
-							<li>
-								创建时间：<input type="text" name="createTime"/>
-							</li>
-
-							<li>
-								更新者：<input type="text" name="updateBy"/>
-							</li>
-
-							<li>
-								更新时间：<input type="text" name="updateTime"/>
 							</li>
 
 							<li>
@@ -58,9 +39,9 @@
 				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="bus:organizationLevel:remove">
 					<i class="fa fa-remove"></i> 删除
 				</a>
-				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="bus:organizationLevel:export">
+				<!--<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="bus:organizationLevel:export">
 						<i class="fa fa-download"></i> 导出
-				 </a>
+				 </a>-->
 			</div>
 			<div class="col-sm-12 select-table table-striped">
 				<table id="bootstrap-table" data-mobile-responsive="true"></table>
@@ -89,12 +70,6 @@
 					field : 'id', 
 					title : '主键id',
 					visible: false
-				},
-				{
-					field : 'organizationId', 
-					title : '社团id',
-					visible: false,
-					sortable: true
 				},
 				{
 					field : 'level', 

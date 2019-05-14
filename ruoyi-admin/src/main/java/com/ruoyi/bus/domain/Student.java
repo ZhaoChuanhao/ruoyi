@@ -1,5 +1,6 @@
 package com.ruoyi.bus.domain;
 
+import com.ruoyi.common.annotation.Excel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.domain.BaseEntity;
@@ -17,10 +18,13 @@ public class Student extends BaseEntity
 	/** 主键id */
 	private Integer id;
 	/** 学号 */
+	@Excel(name = "学号")
 	private String studentNumber;
 	/** 姓名 */
+	@Excel(name = "姓名")
 	private String name;
 	/** 性别 */
+	@Excel(name = "性别")
 	private String sex;
 	/** 学院 */
 	private String collegeId;
@@ -29,6 +33,7 @@ public class Student extends BaseEntity
 	/** 所属社团 */
 	private Integer organizationId;
 	/** 所属社团名称 */
+	@Excel(name = "所属社团")
 	private String organizationName;
 	/** 删除标志（0代表存在 2代表删除） */
 	private String delFlag;

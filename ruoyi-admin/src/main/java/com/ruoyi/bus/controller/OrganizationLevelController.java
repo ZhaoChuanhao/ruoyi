@@ -1,6 +1,10 @@
 package com.ruoyi.bus.controller;
 
+import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.bus.service.IUserService;
+import com.ruoyi.system.domain.SysUser;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +37,8 @@ public class OrganizationLevelController extends BaseController
 	
 	@Autowired
 	private IOrganizationLevelService organizationLevelService;
+	@Autowired
+	private IUserService userService;
 	
 	@RequiresPermissions("bus:organizationLevel:view")
 	@GetMapping()
@@ -85,7 +91,12 @@ public class OrganizationLevelController extends BaseController
 	@PostMapping("/add")
 	@ResponseBody
 	public AjaxResult addSave(OrganizationLevel organizationLevel)
-	{		
+	{
+		SysUser user = userService.getUser();
+		organizationLevel.setCreateBy(user.getName());
+		organizationLevel.setUpdateBy(user.getName());
+		organizationLevel.setCreateTime(new Date());
+		organizationLevel.setUpdateTime(organizationLevel.getCreateTime());
 		return toAjax(organizationLevelService.insertOrganizationLevel(organizationLevel));
 	}
 
@@ -108,7 +119,9 @@ public class OrganizationLevelController extends BaseController
 	@PostMapping("/edit")
 	@ResponseBody
 	public AjaxResult editSave(OrganizationLevel organizationLevel)
-	{		
+	{
+		SysUser user = userService.getUser();
+		organizationLevel.setUpdateBy(user.getName());
 		return toAjax(organizationLevelService.updateOrganizationLevel(organizationLevel));
 	}
 	

@@ -160,12 +160,7 @@ public class ApplyController extends BaseController
 	@ResponseBody
 	public AjaxResult agree(String ids)
 	{
-		try{
-			return applyService.agreeApplyByIds(ids);
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		return AjaxResult.error();
+		return applyService.agreeApplyByIds(ids);
 	}
 
 	/**
@@ -177,12 +172,7 @@ public class ApplyController extends BaseController
 	@ResponseBody
 	public AjaxResult reject(String ids)
 	{
-		try{
-			return toAjax(applyService.rejectApplyByIds(ids));
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		return AjaxResult.error();
+		return toAjax(applyService.rejectApplyByIds(ids));
 	}
 
 	/**
@@ -194,12 +184,7 @@ public class ApplyController extends BaseController
 	@ResponseBody
 	public AjaxResult exit()
 	{
-		try{
-			return applyService.exitOrganizationApply();
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		return AjaxResult.error();
+		return applyService.exitOrganizationApply();
 	}
 
 }

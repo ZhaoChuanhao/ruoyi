@@ -1,5 +1,6 @@
 package com.ruoyi.bus.domain;
 
+import com.ruoyi.common.annotation.Excel;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.domain.BaseEntity;
@@ -19,16 +20,21 @@ public class OrganizationDetail extends BaseEntity
 	/** 社团id */
 	private Integer organizationId;
 	/** 社团名称 */
+	@Excel(name = "社团名称")
 	private String organizationName;
 	/** 学生id */
 	private Integer stuId;
 	/** 学号 */
+	@Excel(name = "学号")
 	private String studentNumber;
 	/** 姓名 */
+	@Excel(name = "姓名")
 	private String name;
 	/** 职级 */
+	@Excel(name = "职级")
 	private String level;
 	/** 职务 */
+	@Excel(name = "职务")
 	private String job;
 	/** 删除标志（0代表存在 2代表删除） */
 	private String delFlag;

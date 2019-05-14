@@ -11,6 +11,8 @@ import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.utils.MailUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.bus.mapper.ApplyMapper;
@@ -27,6 +29,8 @@ import javax.annotation.Resource;
 @Service
 public class ApplyServiceImpl implements IApplyService 
 {
+	private static final Logger log = LoggerFactory.getLogger(ApplyServiceImpl.class);
+
 	@Autowired
 	private ApplyMapper applyMapper;
 	@Autowired
@@ -101,7 +105,7 @@ public class ApplyServiceImpl implements IApplyService
 	}
 
 	@Override
-	public AjaxResult agreeApplyByIds(String idStr) throws Exception {
+	public AjaxResult agreeApplyByIds(String idStr) {
 		SysUser user = userService.getUser();
 		String[] ids = Convert.toStrArray(idStr);
 		StringBuilder message = new StringBuilder();
@@ -171,7 +175,12 @@ public class ApplyServiceImpl implements IApplyService
 			}
 
 			// 发送邮件
-			MailUtil.sendMail(mail);
+			try {
+				MailUtil.sendMail(mail);
+			} catch (Exception e) {
+				e.printStackTrace();
+				log.error("======邮件发送失败！======");
+			}
 		}
 		// 删除申请者信息
 		applyMapper.deleteApplyByIds(ids);
@@ -182,7 +191,7 @@ public class ApplyServiceImpl implements IApplyService
 	}
 
 	@Override
-	public int rejectApplyByIds(String idStr) throws Exception {
+	public int rejectApplyByIds(String idStr) {
 		String[] ids = Convert.toStrArray(idStr);
 		// 发送拒绝信息邮件
 		for (String id : ids){
@@ -212,7 +221,12 @@ public class ApplyServiceImpl implements IApplyService
 			}
 
 			// 发送邮件
-			MailUtil.sendMail(mail);
+			try {
+				MailUtil.sendMail(mail);
+			} catch (Exception e) {
+				e.printStackTrace();
+				log.error("======邮件发送失败！======");
+			}
 		}
 
 		// 删除申请者信息
@@ -220,7 +234,7 @@ public class ApplyServiceImpl implements IApplyService
 	}
 
 	@Override
-	public AjaxResult exitOrganizationApply() throws Exception {
+	public AjaxResult exitOrganizationApply() {
 		SysUser user = userService.getUser();
 		Student student = studentService.selectStudentById(user.getStuId());
 		Organization organization = organizationService.selectOrganizationById(student.getOrganizationId());
@@ -267,6 +281,7 @@ public class ApplyServiceImpl implements IApplyService
 						MailUtil.sendMail(mail);
 					}catch (Exception e){
 						e.printStackTrace();
+						log.error("======邮件发送失败！======");
 					}
 				}
 			}).start();

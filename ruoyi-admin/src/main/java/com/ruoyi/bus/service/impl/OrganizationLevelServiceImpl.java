@@ -43,18 +43,6 @@ public class OrganizationLevelServiceImpl implements IOrganizationLevelService
 	{
 	    return organizationLevelMapper.selectOrganizationLevelList(organizationLevel);
 	}
-
-	/**
-	 * 查询社团职级列表
-	 *
-	 * @param organizationId 社团ID
-	 * @return 社团职级集合
-	 */
-	@Override
-	public List<OrganizationLevel> selectOrganizationLevelListByOrganizationId(Integer organizationId)
-	{
-		return organizationLevelMapper.selectOrganizationLevelListByOrganizationId(organizationId);
-	}
 	
     /**
      * 新增社团职级

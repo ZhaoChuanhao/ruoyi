@@ -57,22 +57,20 @@ public interface IApplyService
 	 * 同意申请信息
 	 * @param ids
 	 * @return
-	 * @throws Exception
 	 */
-	public AjaxResult agreeApplyByIds(String ids) throws Exception;
+	public AjaxResult agreeApplyByIds(String ids);
 
 	/**
 	 * 拒绝申请信息
 	 * @param ids
 	 * @return
-	 * @throws Exception
 	 */
-	public int rejectApplyByIds(String ids) throws Exception;
+	public int rejectApplyByIds(String ids);
 
 	/**
 	 * 退出社团申请
-	 * @throws Exception
+	 * @return
 	 */
-	public AjaxResult exitOrganizationApply() throws Exception;
+	public AjaxResult exitOrganizationApply();
 	
 }

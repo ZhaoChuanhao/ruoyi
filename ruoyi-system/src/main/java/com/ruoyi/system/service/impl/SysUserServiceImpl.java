@@ -458,7 +458,7 @@ public class SysUserServiceImpl implements ISysUserService
                         SysStudent sysStudent = new SysStudent();
                         sysStudent.setStudentNumber(user.getStudentNumber());
                         sysStudent.setName(user.getName());
-                        sysStudent.setSex(user.getSex());
+                        sysStudent.setSex("0".equals(user.getSex()) ? "男" : "女");
                         sysStudent.setCreateBy("admin");
                         sysStudent.setUpdateBy("admin");
                         sysStudent.setCreateTime(new Date());
@@ -487,7 +487,7 @@ public class SysUserServiceImpl implements ISysUserService
                         SysStudent sysStudent = new SysStudent();
                         sysStudent.setStudentNumber(user.getStudentNumber());
                         sysStudent.setName(user.getName());
-                        sysStudent.setSex(user.getSex());
+                        sysStudent.setSex("0".equals(user.getSex()) ? "男" : "女");
                         sysStudent.setCreateBy("admin");
                         sysStudent.setUpdateBy("admin");
                         sysStudent.setCreateTime(new Date());

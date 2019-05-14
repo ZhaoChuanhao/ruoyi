@@ -16,8 +16,6 @@ public class OrganizationLevel extends BaseEntity
 	
 	/** 主键id */
 	private Integer id;
-	/** 社团id（0代表公共职级） */
-	private Integer organizationId;
 	/** 职级 */
 	private String level;
 	/** 职务 */
@@ -34,16 +32,8 @@ public class OrganizationLevel extends BaseEntity
 	{
 		return id;
 	}
-	public void setOrganizationId(Integer organizationId) 
-	{
-		this.organizationId = organizationId;
-	}
 
-	public Integer getOrganizationId() 
-	{
-		return organizationId;
-	}
-	public void setLevel(String level) 
+	public void setLevel(String level)
 	{
 		this.level = level;
 	}
@@ -74,7 +64,6 @@ public class OrganizationLevel extends BaseEntity
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
-            .append("organizationId", getOrganizationId())
             .append("level", getLevel())
             .append("job", getJob())
             .append("delFlag", getDelFlag())

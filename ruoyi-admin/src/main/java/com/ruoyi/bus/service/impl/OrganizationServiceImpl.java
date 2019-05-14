@@ -16,6 +16,8 @@ import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.utils.MailUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.bus.mapper.OrganizationMapper;
@@ -34,6 +36,8 @@ import javax.annotation.Resource;
 @Service
 public class OrganizationServiceImpl implements IOrganizationService 
 {
+	private static final Logger log = LoggerFactory.getLogger(OrganizationServiceImpl.class);
+
 	@Autowired
 	private OrganizationMapper organizationMapper;
 	@Autowired
@@ -143,22 +147,24 @@ public class OrganizationServiceImpl implements IOrganizationService
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
+					// 发送申请成功邮件给社团团长
+					OrganizationDetail organizationDetail = organizationDetailService.selectLeaderByOrganizationId(apply.getOrganizationId());
+					SysUser sysUser = sysUserService.selectUserByStuId(organizationDetail.getStuId());
+					Mail mail = new Mail();
+					mail.setSend(Mail.sysSend);
+					mail.setReceive(sysUser.getEmail());
+					mail.setTheme("申请信息待处理");
+					mail.setContent("尊敬的社长您好：<br/>" +
+							"&emsp;&emsp;有新的同学申请您的社团啦！要及时处理哦！<br/><br/>" +
+							"------------------------------------------------------------------<br/>" +
+							"系统提醒邮件<br/>" +
+							new Date().toString());
+					// 发送邮件
 					try{
-						// 发送申请成功邮件给社团团长
-						OrganizationDetail organizationDetail = organizationDetailService.selectLeaderByOrganizationId(apply.getOrganizationId());
-						SysUser sysUser = sysUserService.selectUserByStuId(organizationDetail.getStuId());
-						Mail mail = new Mail();
-						mail.setSend(Mail.sysSend);
-						mail.setReceive(sysUser.getEmail());
-						mail.setTheme("申请信息待处理");
-						mail.setContent("尊敬的社长您好：<br/>" +
-								"&emsp;&emsp;有新的同学申请您的社团啦！要及时处理哦！<br/><br/>" +
-								"------------------------------------------------------------------<br/>" +
-								"系统提醒邮件<br/>" +
-								new Date().toString());
 						MailUtil.sendMail(mail);
 					}catch (Exception e){
 						e.printStackTrace();
+						log.error("======邮件发送失败！======");
 					}
 				}
 			}).start();

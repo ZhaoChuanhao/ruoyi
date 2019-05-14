@@ -12,6 +12,8 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.utils.MailUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.bus.mapper.OrganizationDetailMapper;
@@ -28,6 +30,8 @@ import com.ruoyi.common.core.text.Convert;
 @Service
 public class OrganizationDetailServiceImpl implements IOrganizationDetailService 
 {
+	private static final Logger log = LoggerFactory.getLogger(OrganizationDetailServiceImpl.class);
+
 	@Autowired
 	private OrganizationDetailMapper organizationDetailMapper;
 	@Autowired
@@ -122,7 +126,7 @@ public class OrganizationDetailServiceImpl implements IOrganizationDetailService
 		// 查询该成员信息
 		OrganizationDetail organizationDetail = organizationDetailMapper.selectOrganizationDetailById(id);
 		// 判断该成员等级是否是除了社团团长以外的最高职级，即是否可升职
-		List<OrganizationLevel> organizationLevelList = organizationLevelService.selectOrganizationLevelListByOrganizationId(organizationDetail.getOrganizationId());
+		List<OrganizationLevel> organizationLevelList = organizationLevelService.selectOrganizationLevelList(new OrganizationLevel());
 		// 这里集合中的第一个元素即为除了社团团长以外的最高职级
 		OrganizationLevel organizationLevel = organizationLevelList.get(0);
 		if (organizationDetail.getLevel().compareTo(organizationLevel.getLevel()) == 0){
@@ -154,6 +158,7 @@ public class OrganizationDetailServiceImpl implements IOrganizationDetailService
 						MailUtil.sendMail(mail);
 					} catch (Exception e) {
 						e.printStackTrace();
+						log.error("======邮件发送失败！======");
 					}
 				}
 			}).start();
@@ -167,7 +172,7 @@ public class OrganizationDetailServiceImpl implements IOrganizationDetailService
 		// 查询该成员信息
 		OrganizationDetail organizationDetail = organizationDetailMapper.selectOrganizationDetailById(id);
 		// 判断该成员等级是否是最低职级，即是否可降职
-		List<OrganizationLevel> organizationLevelList = organizationLevelService.selectOrganizationLevelListByOrganizationId(organizationDetail.getOrganizationId());
+		List<OrganizationLevel> organizationLevelList = organizationLevelService.selectOrganizationLevelList(new OrganizationLevel());
 		// 这里集合中的最后一个元素即为最低职级
 		OrganizationLevel organizationLevel = organizationLevelList.get(organizationLevelList.size() - 1);
 		if (organizationDetail.getLevel().compareTo(organizationLevel.getLevel()) == 0){
@@ -199,6 +204,7 @@ public class OrganizationDetailServiceImpl implements IOrganizationDetailService
 						MailUtil.sendMail(mail);
 					} catch (Exception e) {
 						e.printStackTrace();
+						log.error("======邮件发送失败！======");
 					}
 				}
 			}).start();
@@ -239,6 +245,7 @@ public class OrganizationDetailServiceImpl implements IOrganizationDetailService
 						MailUtil.sendMail(mail);
 					} catch (Exception e) {
 						e.printStackTrace();
+						log.error("======邮件发送失败！======");
 					}
 				}
 			}).start();

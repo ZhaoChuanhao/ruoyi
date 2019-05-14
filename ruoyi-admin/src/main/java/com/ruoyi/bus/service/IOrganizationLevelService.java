@@ -26,14 +26,6 @@ public interface IOrganizationLevelService
      * @return 社团职级集合
      */
 	public List<OrganizationLevel> selectOrganizationLevelList(OrganizationLevel organizationLevel);
-
-	/**
-	 * 查询社团职级列表
-	 *
-	 * @param organizaitionId 社团ID
-	 * @return 社团职级集合
-	 */
-	public List<OrganizationLevel> selectOrganizationLevelListByOrganizationId(Integer organizaitionId);
 	
 	/**
      * 新增社团职级
