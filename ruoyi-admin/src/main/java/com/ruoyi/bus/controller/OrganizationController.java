@@ -168,7 +168,7 @@ public class OrganizationController extends BaseController
 	@ResponseBody
 	public AjaxResult remove(String ids)
 	{		
-		return toAjax(organizationService.deleteOrganizationByIds(ids));
+		return organizationService.deleteOrganizationByIds(ids);
 	}
 	
 }

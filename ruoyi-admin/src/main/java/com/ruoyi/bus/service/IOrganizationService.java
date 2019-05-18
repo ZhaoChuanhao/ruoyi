@@ -58,7 +58,7 @@ public interface IOrganizationService
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-	public int deleteOrganizationByIds(String ids);
+	public AjaxResult deleteOrganizationByIds(String ids);
 
 	/**
 	 * 申请社团

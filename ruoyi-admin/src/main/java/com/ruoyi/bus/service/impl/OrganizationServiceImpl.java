@@ -105,13 +105,19 @@ public class OrganizationServiceImpl implements IOrganizationService
 	/**
      * 删除社团对象
      * 
-     * @param ids 需要删除的数据ID
+     * @param idStr 需要删除的数据ID
      * @return 结果
      */
 	@Override
-	public int deleteOrganizationByIds(String ids)
+	public AjaxResult deleteOrganizationByIds(String idStr)
 	{
-		return organizationMapper.deleteOrganizationByIds(Convert.toStrArray(ids));
+		String[] ids = Convert.toStrArray(idStr);
+		for (String id : ids){
+			if (organizationDetailService.selectOrganizationDetailByOrganizationId(Integer.valueOf(id)) != null){
+				return AjaxResult.error("该社团下仍有学生信息，无法删除！");
+			}
+		}
+		return organizationMapper.deleteOrganizationByIds(ids) > 0 ? AjaxResult.success() : AjaxResult.error();
 	}
 
 	@Override
