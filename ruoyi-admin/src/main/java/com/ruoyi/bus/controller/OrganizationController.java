@@ -102,7 +102,7 @@ public class OrganizationController extends BaseController
 		organization.setUpdateBy(user.getName());
 		organization.setCreateTime(new Date());
 		organization.setUpdateTime(organization.getCreateTime());
-		return toAjax(organizationService.insertOrganization(organization));
+		return organizationService.insertOrganization(organization);
 	}
 
 	/**

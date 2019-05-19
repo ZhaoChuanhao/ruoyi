@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
     <select id="selectActivityList" parameterType="Activity" resultMap="ActivityResult">
         <include refid="selectActivityVo"/>
-        <where>  
+        where del_flag = 0
             <if test="id != null "> and id = #{id}</if>
              <if test="title != null  and title != '' "> and title like concat('%', #{title}, '%')</if>
              <if test="content != null  and content != '' "> and content = #{content}</if>
@@ -38,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="createTime != null "> and create_time = #{createTime}</if>
              <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
              <if test="updateTime != null "> and update_time = #{updateTime}</if>
-         </where>
+
     </select>
     
     <select id="selectActivityById" parameterType="Integer" resultMap="ActivityResult">

@@ -142,8 +142,9 @@ public class SysUserController extends BaseController
             }
             // 否则将该学生与用户绑定
             user.setStuId(student.getId());
+            return toAjax(userService.insertUser(user));
         }
-        return toAjax(userService.insertUser(user));
+        return AjaxResult.error("没有该学生信息！");
     }
 
     /**

@@ -3,12 +3,8 @@ package com.ruoyi.bus.service.impl;
 import java.util.Date;
 import java.util.List;
 
-import com.ruoyi.bus.domain.Apply;
-import com.ruoyi.bus.domain.Mail;
-import com.ruoyi.bus.domain.OrganizationDetail;
-import com.ruoyi.bus.service.IApplyService;
-import com.ruoyi.bus.service.IOrganizationDetailService;
-import com.ruoyi.bus.service.IUserService;
+import com.ruoyi.bus.domain.*;
+import com.ruoyi.bus.service.*;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.util.ShiroUtils;
@@ -21,9 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.bus.mapper.OrganizationMapper;
-import com.ruoyi.bus.domain.Organization;
-import com.ruoyi.bus.service.IOrganizationService;
 import com.ruoyi.common.core.text.Convert;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -48,6 +43,8 @@ public class OrganizationServiceImpl implements IOrganizationService
 	private IOrganizationDetailService organizationDetailService;
 	@Autowired
 	private ISysUserService sysUserService;
+	@Autowired
+	private IStudentService studentService;
 
 	/**
      * 查询社团信息
@@ -85,9 +82,39 @@ public class OrganizationServiceImpl implements IOrganizationService
      * @return 结果
      */
 	@Override
-	public int insertOrganization(Organization organization)
+	@Transactional(rollbackFor = Exception.class)
+	public AjaxResult insertOrganization(Organization organization)
 	{
-	    return organizationMapper.insertOrganization(organization);
+		// 新增社团的同时新增一个社团团长
+		Student student = studentService.selectStudentByStudentNumber(organization.getStudentNumber());
+		if (student == null){
+			return AjaxResult.error("不存在该团长信息！");
+		}else if (student.getOrganizationId() != null){
+			return AjaxResult.error("该团长已有其他社团！");
+		}
+		int count = 0;
+		SysUser user = userService.getUser();
+		count += organizationMapper.insertOrganization(organization);
+		if (count == 0){
+			return AjaxResult.error();
+		}
+		OrganizationDetail organizationDetail = new OrganizationDetail();
+		organizationDetail.setStuId(student.getId());
+		organizationDetail.setOrganizationId(organization.getId());
+		organizationDetail.setStudentNumber(organization.getStudentNumber());
+		organizationDetail.setName(organization.getLeader());
+		organizationDetail.setLevel("999");
+		organizationDetail.setJob("社团团长");
+		organizationDetail.setOrganizationName(organization.getName());
+		organizationDetail.setCreateBy(user.getName());
+		organizationDetail.setUpdateBy(user.getName());
+		organizationDetail.setCreateTime(new Date());
+		organizationDetail.setUpdateTime(organizationDetail.getCreateTime());
+		count += organizationDetailService.insertOrganizationDetail(organizationDetail);
+
+		student.setOrganizationId(organization.getId());
+		count += studentService.updateStudent(student);
+	    return count == 3 ? AjaxResult.success() : AjaxResult.error();
 	}
 	
 	/**

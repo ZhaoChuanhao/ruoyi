@@ -42,7 +42,7 @@ public interface IOrganizationService
      * @param organization 社团信息
      * @return 结果
      */
-	public int insertOrganization(Organization organization);
+	public AjaxResult insertOrganization(Organization organization);
 	
 	/**
      * 修改社团

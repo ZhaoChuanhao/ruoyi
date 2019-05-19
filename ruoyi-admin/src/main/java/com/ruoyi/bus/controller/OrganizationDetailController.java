@@ -122,9 +122,17 @@ public class OrganizationDetailController extends BaseController
 		organizationDetail.setUpdateTime(organizationDetail.getCreateTime());
 		// 封装社团ID
 		Organization organization = organizationService.selectOrganizationByName(organizationDetail.getOrganizationName());
+		if (organization == null){
+			return AjaxResult.error("没有该社团信息！");
+		}
 		organizationDetail.setOrganizationId(organization.getId());
 		// 封装学生ID
 		Student student = studentService.selectStudentByStudentNumber(organizationDetail.getStudentNumber());
+		if (student == null){
+			return AjaxResult.error("没有该学生信息！");
+		}else if (student.getOrganizationId() != null){
+			return AjaxResult.error("该学生已加入社团！");
+		}
 		organizationDetail.setStuId(student.getId());
 		return toAjax(organizationDetailService.insertOrganizationDetail(organizationDetail));
 	}

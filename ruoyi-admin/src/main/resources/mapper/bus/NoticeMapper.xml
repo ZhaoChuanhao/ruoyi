@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
     <select id="selectNoticeList" parameterType="Notice" resultMap="NoticeResult">
         <include refid="selectNoticeVo"/>
-        <where>  
+        where del_flag = 0
             <if test="id != null "> and id = #{id}</if>
              <if test="title != null  and title != '' "> and title like concat('%', #{title}, '%')</if>
              <if test="content != null  and content != '' "> and content = #{content}</if>
@@ -32,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="createTime != null "> and create_time = #{createTime}</if>
              <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
              <if test="updateTime != null "> and update_time = #{updateTime}</if>
-         </where>
+
     </select>
     
     <select id="selectNoticeById" parameterType="Integer" resultMap="NoticeResult">
@@ -80,11 +80,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
 	<delete id="deleteNoticeById" parameterType="Integer">
-        delete from bus_notice where id = #{id}
+        update bus_notice
+        set del_falg = 2
+        where id = #{id}
     </delete>
 	
     <delete id="deleteNoticeByIds" parameterType="String">
-        delete from bus_notice where id in 
+        update bus_notice
+        set del_flag = 2
+        where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

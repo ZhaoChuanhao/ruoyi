@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
     <select id="selectStudentList" parameterType="Student" resultMap="StudentResult">
         <include refid="selectStudentVo"/>
-        <where>  
+        where bs.del_flag = 0
             <if test="id != null "> and bs.id = #{id}</if>
              <if test="studentNumber != null  and studentNumber != '' "> and bs.student_number = #{studentNumber}</if>
              <if test="name != null  and name != '' "> and bs.name = #{name}</if>
@@ -42,7 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="createTime != null "> and bs.create_time = #{createTime}</if>
              <if test="updateBy != null  and updateBy != '' "> and bs.update_by = #{updateBy}</if>
              <if test="updateTime != null "> and bs.update_time = #{updateTime}</if>
-         </where>
+
     </select>
     
     <select id="selectStudentById" parameterType="Integer" resultMap="StudentResult">
@@ -53,6 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectStudentByStudentNumber" parameterType="String" resultMap="StudentResult">
         <include refid="selectStudentVo"/>
         where bs.student_number = #{studentNumber}
+        and bs.del_flag = 0
     </select>
         
     <insert id="insertStudent" parameterType="Student" useGeneratedKeys="true" keyProperty="id">
@@ -110,11 +111,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
 	<delete id="deleteStudentById" parameterType="Integer">
-        delete from bus_student where id = #{id}
+        update bus_student
+        set del_flag = 2
+        where id = #{id}
     </delete>
 	
     <delete id="deleteStudentByIds" parameterType="String">
-        delete from bus_student where id in 
+        update bus_student
+        set del_flag = 2
+        where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
