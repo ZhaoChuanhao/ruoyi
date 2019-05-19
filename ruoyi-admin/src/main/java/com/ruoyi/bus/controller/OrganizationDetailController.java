@@ -134,6 +134,8 @@ public class OrganizationDetailController extends BaseController
 			return AjaxResult.error("该学生已加入社团！");
 		}
 		organizationDetail.setStuId(student.getId());
+		student.setOrganizationId(organization.getId());
+		studentService.updateStudent(student);
 		return toAjax(organizationDetailService.insertOrganizationDetail(organizationDetail));
 	}
 

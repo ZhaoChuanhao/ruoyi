@@ -29,12 +29,10 @@ public class MailUtil {
         prop.setProperty("mail.host", "smtp.qq.com");
         prop.setProperty("mail.transport.protocol", "smtp");
         prop.setProperty("mail.smtp.auth", "true");
-        // 创建Session
         Session session = Session.getInstance(prop);
         session.setDebug(true);
         // 通过session得到transport对象
         Transport ts = session.getTransport();
-        // 使用发件人的用户名和授权码登录到邮件服务器
         ts.connect("smtp.qq.com", Mail.sysSend, Mail.sysPassword);
         Message message = createTextMail(session, mail);
         ts.sendMessage(message, message.getAllRecipients());
